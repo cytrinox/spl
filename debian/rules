@@ -20,7 +20,7 @@ override_dh_auto_test:
 
 override_dh_auto_install:
 	@# Install the utilities.
-	make install DESTDIR='$(CURDIR)/debian/tmp'
+	$(MAKE) install DESTDIR='$(CURDIR)/debian/tmp'
 
 	@# Create a dummy hostid file for the zfs-initramfs package.
 	@# NB: Commentary in the spl.postinst script.
@@ -29,7 +29,7 @@ override_dh_auto_install:
 
 	@# Get a bare copy of the source code.
 	@# This creates the $(CURDIR)/$(NAME)-$(VERSION)/ tree.
-	make distdir
+	$(MAKE) distdir
 
 	@# Delete boilerplate to satisfy the lintian extra-license-file check.
 	rm '$(CURDIR)/$(NAME)-$(VERSION)/COPYING'
