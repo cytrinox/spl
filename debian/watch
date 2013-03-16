@@ -1,2 +1,2 @@
 version=3
-http://githubredir.debian.net/github/behlendorf/spl/([\d\.].*).tar.gz
+https://github.com/zfsonlinux/spl/downloads/ .*spl-([\d\.]+)\.tar\.gz$
