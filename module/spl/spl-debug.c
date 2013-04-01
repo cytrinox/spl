@@ -6,7 +6,7 @@
  *  UCRL-CODE-235197
  *
  *  This file is part of the SPL, Solaris Porting Layer.
- *  For details, see <http://github.com/behlendorf/spl/>.
+ *  For details, see <http://zfsonlinux.org/>.
  *
  *  The SPL is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
@@ -1099,10 +1099,11 @@ void spl_debug_bug(char *file, const char *func, const int line, int flags)
                 spl_panic_in_progress = 1;
 
         spl_debug_dumpstack(NULL);
-        spl_debug_dumplog(flags);
 
-        if (spl_debug_panic_on_bug)
+        if (spl_debug_panic_on_bug) {
+                spl_debug_dumplog(flags);
                 panic("SPL PANIC");
+        }
 
         set_task_state(current, TASK_UNINTERRUPTIBLE);
         while (1)

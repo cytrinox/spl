@@ -8,7 +8,7 @@
 # UCRL-CODE-235197
 #
 # This file is part of the SPL, Solaris Porting Layer.
-# For details, see <http://github.com/behlendorf/spl/>.
+# For details, see <http://zfsonlinux.org/>.
 #
 # The SPL is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -47,19 +47,35 @@ SPL_AC_CONFIG
 
 AC_CONFIG_FILES([
 	Makefile
+	man/Makefile
+	man/man1/Makefile
 	lib/Makefile
 	cmd/Makefile
 	module/Makefile
 	module/spl/Makefile
 	module/splat/Makefile
 	include/Makefile
+	include/fs/Makefile
+	include/linux/Makefile
+	include/rpc/Makefile
+	include/sharefs/Makefile
+	include/sys/Makefile
+	include/sys/fm/Makefile
+	include/sys/fs/Makefile
+	include/sys/sysevent/Makefile
+	include/util/Makefile
+	include/vm/Makefile
 	scripts/Makefile
-	spl.spec
-	spl-modules.spec
-	PKGBUILD-spl
-	PKGBUILD-spl-modules
+	rpm/Makefile
+	rpm/fedora/Makefile
+	rpm/fedora/spl.spec
+	rpm/fedora/spl-kmod.spec
+	rpm/fedora/spl-dkms.spec
+	rpm/generic/Makefile
+	rpm/generic/spl.spec
+	rpm/generic/spl-kmod.spec
+	rpm/generic/spl-dkms.spec
 	spl.release
-	dkms.conf
 ])
 
 AC_OUTPUT
