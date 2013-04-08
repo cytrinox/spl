@@ -1,2 +1,2 @@
 version=3
-https://github.com/zfsonlinux/spl/downloads/ .*spl-([\d\.]+)\.tar\.gz$
+http://zfsonlinux.org/ .*spl-([\d\.]+)\.tar\.gz$
