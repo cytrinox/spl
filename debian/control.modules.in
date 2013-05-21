@@ -9,7 +9,8 @@ Build-Depends: autotools-dev,
  debhelper (>= 7.4),
  dkms (>> 2.1.1.2-5),
  libtool,
- linux-headers-_KVERS_
+ linux-headers-_KVERS_-common,
+ linux-headers-_KVERS_-amd64
 Standards-Version: 3.8.4
 Homepage: http://www.zfsonlinux.org/
 Vcs-Git: git://anonscm.debian.org/pkg-zfsonlinux/spl.git
