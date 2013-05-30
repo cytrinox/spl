@@ -32,11 +32,11 @@ if [ ! -f /etc/hostid ] || [ $(stat -c %s /etc/hostid) -lt 4 ] ; then
 
 	# Big Endian
 	if echo | gcc -E -dM - | grep -q "__BYTE_ORDER__.*__ORDER_BIG_ENDIAN__"; then
-		# Invoke the external printf. shell builtin lacks the byte format.
-		"$(which printf)" "\x$AA\x$BB\x$CC\x$DD" >/etc/hostid
+		# Invoke the printf from coreutils. shell builtin lacks the byte format.
+		/usr/bin/printf "\x$AA\x$BB\x$CC\x$DD" >/etc/hostid
 	else
 	# Little Endian
-		"$(which printf)" "\x$DD\x$CC\x$BB\x$AA" >/etc/hostid
+		/usr/bin/printf "\x$DD\x$CC\x$BB\x$AA" >/etc/hostid
 	fi
 fi
 
