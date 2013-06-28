@@ -1,7 +1,7 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: Solaris Porting Layer for Linux
 Upstream-Contact: Brian Behlendorf <behlendorf1@llnl.gov>
-Source: https://github.com/zfsonlinux/zfs/
+Source: https://github.com/zfsonlinux/spl/
 Disclaimer:
  This work was produced at the Lawrence Livermore National Laboratory
  (LLNL) under Contract No. DE-AC52-07NA27344 (Contract 44) between
@@ -85,7 +85,8 @@ License: GPL-2+
 
 Files: debian/*
 Copyright: Darik Horn <dajhorn@vanadac.com>
-Source: https://github.com/dajhorn/pkg-spl/
+ Carlos Alberto Lopez Perez <clopez@igalia.com>
+ Aron Xu <aron@debian.org>
 License: GPL-2+
 
 Files: include/linux/zlib_compat.h
@@ -144,4 +145,6 @@ License: GPL-2+
 
 Files: module/splat/splat-linux.c
 Copyright: Lawrence Livermore National Security, LLC.
+License: GPL-2+
+
 License: GPL-2+
