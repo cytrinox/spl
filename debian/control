@@ -18,7 +18,7 @@ Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-zfsonlinux/spl.git
 Package: spl-dkms
 Architecture: all
 Depends: ${misc:Depends}, dkms (>> 2.1.1.2-5), lsb-release
-Recommends: spl (>= ${source:Upstream-Version))
+Recommends: spl (>= ${source:Upstream-Version})
 Description: Solaris Porting Layer kernel modules for Linux
  The Solaris Porting Layer (SPL) is a Linux kernel module which provides
  many of the Solaris kernel APIs. This shim layer makes it possible to
