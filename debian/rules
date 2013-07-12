@@ -11,6 +11,8 @@ ifndef DEB_HOST_ARCH
 DEB_HOST_ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)
 endif
 
+KVERS=$(shell uname -r)
+
 non_epoch_version=$(shell echo $(KVERS) | perl -pe 's/^\d+://')
 PACKAGE=spl
 pmodules = $(PACKAGE)-modules-$(non_epoch_version)-$(DEB_HOST_ARCH)
