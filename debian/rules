@@ -15,7 +15,7 @@ KVERS=$(shell uname -r)
 
 non_epoch_version=$(shell echo $(KVERS) | perl -pe 's/^\d+://')
 PACKAGE=spl
-pmodules = $(PACKAGE)-modules-$(non_epoch_version)-$(DEB_HOST_ARCH)
+pmodules = $(PACKAGE)-modules-$(non_epoch_version)
 
 %:
 	dh $@ --with dkms
