@@ -1,3 +1,12 @@
+spl-linux (0.6.1-2) experimental; urgency=low
+
+  * Add license info for scripts/kmodtool
+  * Add linux 3.10 compatibility patch from upstream. (Closes: #717565)
+  * Add facility to build udeb and binary modules, thanks Turbo Fredriksson
+    for the work.
+
+ -- Aron Xu <aron@debian.org>  Mon, 29 Jul 2013 16:04:24 +0800
+
 spl-linux (0.6.1-1) experimental; urgency=low
 
   * Initial Release (Closes: #686453)
