@@ -49,7 +49,12 @@ noinst_PROGRAMS = spl$(EXEEXT)
 sbin_PROGRAMS = splat$(EXEEXT)
 subdir = cmd
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/config/spl-build.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/config/libtool.m4 \
+	$(top_srcdir)/config/ltoptions.m4 \
+	$(top_srcdir)/config/ltsugar.m4 \
+	$(top_srcdir)/config/ltversion.m4 \
+	$(top_srcdir)/config/lt~obsolete.m4 \
+	$(top_srcdir)/config/spl-build.m4 \
 	$(top_srcdir)/config/spl-meta.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -270,8 +275,9 @@ top_srcdir = @top_srcdir@
 DEFAULT_INCLUDES = -include ${top_builddir}/spl_config.h \
 	-I$(top_srcdir)/lib
 AM_LIBTOOLFLAGS = --silent
+AM_CPPFLAGS = -D__USE_LARGEFILE64
 AM_CFLAGS = -Wall -Wshadow -Wstrict-prototypes -fno-strict-aliasing \
-	-D__USE_LARGEFILE64 ${DEBUG_CFLAGS}
+	${DEBUG_CFLAGS}
 spl_SOURCES = spl.c
 splat_SOURCES = splat.c
 splat_LDFLAGS = $(top_builddir)/lib/libcommon.la

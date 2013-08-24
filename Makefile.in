@@ -85,7 +85,12 @@ DIST_COMMON = $(am__configure_deps) $(am__extra_HEADERS_DIST) \
 @CONFIG_KERNEL_TRUE@am__append_2 = module
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/config/spl-build.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/config/libtool.m4 \
+	$(top_srcdir)/config/ltoptions.m4 \
+	$(top_srcdir)/config/ltsugar.m4 \
+	$(top_srcdir)/config/ltversion.m4 \
+	$(top_srcdir)/config/lt~obsolete.m4 \
+	$(top_srcdir)/config/spl-build.m4 \
 	$(top_srcdir)/config/spl-meta.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -345,6 +350,7 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+ACLOCAL_AMFLAGS = -I config
 SUBDIRS = include rpm $(am__append_1) $(am__append_2)
 @CONFIG_KERNEL_TRUE@extradir = /usr/src/spl-$(VERSION)
 @CONFIG_KERNEL_TRUE@extra_HEADERS = spl.release.in spl_config.h.in
@@ -1004,7 +1010,7 @@ deb-kmod: deb-local rpm-kmod
 @CONFIG_KERNEL_TRUE@	version=${VERSION}-${RELEASE}; \
 @CONFIG_KERNEL_TRUE@	arch=`$(RPM) -qp $${name}-kmod-$${version}.src.rpm --qf %{arch} | tail -1`; \
 @CONFIG_KERNEL_TRUE@	pkg1=kmod-$${name}*$${version}.$${arch}.rpm; \
-@CONFIG_KERNEL_TRUE@	fakeroot $(ALIEN) --scripts --to-deb $$pkg1; \
+@CONFIG_KERNEL_TRUE@	fakeroot $(ALIEN) --bump=0 --scripts --to-deb $$pkg1; \
 @CONFIG_KERNEL_TRUE@	$(RM) $$pkg1
 
 deb-utils: deb-local rpm-utils
@@ -1012,7 +1018,7 @@ deb-utils: deb-local rpm-utils
 @CONFIG_USER_TRUE@	version=${VERSION}-${RELEASE}; \
 @CONFIG_USER_TRUE@	arch=`$(RPM) -qp $${name}-$${version}.src.rpm --qf %{arch} | tail -1`; \
 @CONFIG_USER_TRUE@	pkg1=$${name}-$${version}.$${arch}.rpm; \
-@CONFIG_USER_TRUE@	fakeroot $(ALIEN) --scripts --to-deb $$pkg1; \
+@CONFIG_USER_TRUE@	fakeroot $(ALIEN) --bump=0 --scripts --to-deb $$pkg1; \
 @CONFIG_USER_TRUE@	$(RM) $$pkg1
 
 deb: deb-kmod deb-utils
