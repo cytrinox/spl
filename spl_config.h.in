@@ -123,6 +123,9 @@
 /* kmalloc_node() is available */
 #undef HAVE_KMALLOC_NODE
 
+/* kuid_t/kgid_t in use */
+#undef HAVE_KUIDGID_T
+
 /* kvasprintf() is available */
 #undef HAVE_KVASPRINTF
 
@@ -149,6 +152,9 @@
 
 /* struct path used in struct nameidata */
 #undef HAVE_PATH_IN_NAMEIDATA
+
+/* yes */
+#undef HAVE_PDE_DATA
 
 /* pgdat helpers are available */
 #undef HAVE_PGDAT_HELPERS
@@ -224,6 +230,9 @@
 
 /* vfs_fsync() is available */
 #undef HAVE_VFS_FSYNC
+
+/* yes */
+#undef HAVE_VMALLOC_INFO
 
 /* Page state NR_ACTIVE is available */
 #undef HAVE_ZONE_STAT_ITEM_NR_ACTIVE

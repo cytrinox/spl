@@ -47,7 +47,12 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/config/Rules.am
 subdir = lib
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/config/spl-build.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/config/libtool.m4 \
+	$(top_srcdir)/config/ltoptions.m4 \
+	$(top_srcdir)/config/ltsugar.m4 \
+	$(top_srcdir)/config/ltversion.m4 \
+	$(top_srcdir)/config/lt~obsolete.m4 \
+	$(top_srcdir)/config/spl-build.m4 \
 	$(top_srcdir)/config/spl-meta.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -260,8 +265,9 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 DEFAULT_INCLUDES = -include ${top_builddir}/spl_config.h
 AM_LIBTOOLFLAGS = --silent
+AM_CPPFLAGS = -D__USE_LARGEFILE64
 AM_CFLAGS = -Wall -Wshadow -Wstrict-prototypes -fno-strict-aliasing \
-	-D__USE_LARGEFILE64 ${DEBUG_CFLAGS}
+	${DEBUG_CFLAGS}
 noinst_LTLIBRARIES = libcommon.la
 libcommon_la_SOURCES = list.c
 EXTRA_DIST = list.h

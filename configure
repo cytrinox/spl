@@ -827,7 +827,6 @@ am__tar
 AMTAR
 am__leading_dot
 SET_MAKE
-AWK
 mkdir_p
 MKDIR_P
 INSTALL_STRIP_PROGRAM
@@ -872,6 +871,7 @@ RELEASE
 SPL_META_RELEASE
 SPL_META_VERSION
 SPL_META_NAME
+AWK
 target_alias
 host_alias
 build_alias
@@ -2302,6 +2302,48 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
+	for ac_prog in gawk mawk nawk awk
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if test "${ac_cv_prog_AWK+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$AWK"; then
+  ac_cv_prog_AWK="$AWK" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_AWK="$ac_prog"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+AWK=$ac_cv_prog_AWK
+if test -n "$AWK"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $AWK" >&5
+$as_echo "$AWK" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+  test -n "$AWK" && break
+done
+
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking metadata" >&5
 $as_echo_n "checking metadata... " >&6; }
 
@@ -2310,16 +2352,7 @@ $as_echo_n "checking metadata... " >&6; }
 	if test -f "$META"; then
 		_spl_ac_meta_type="META file"
 
-		SPL_META_NAME=`perl -n\
-		-e "BEGIN { \\$key=shift @ARGV; }"\
-		-e "next unless s/^\s*\\$key[:=]//i;"\
-		-e "s/^((?:[^'\"#]*(?:(['\"])[^\2]*\2)*)*)#.*/\\$1/;"\
-		-e "s/^\s+//;"\
-		-e "s/\s+$//;"\
-		-e "s/^(['\"])(.*)\1/\\$2/;"\
-		-e "\\$val=\\$_;"\
-		-e "END { print \\$val if defined \\$val; }"\
-		'(?:NAME|PROJECT|PACKAGE)' $META`;
+		SPL_META_NAME=`$AWK -F ':[ \t]+' '$1 ~ /^ *(Name|Project|Package)$/ { print $2; exit }' $META`;
 		if test -n "$SPL_META_NAME"; then
 
 cat >>confdefs.h <<_ACEOF
@@ -2329,16 +2362,7 @@ _ACEOF
 
 		fi
 
-		SPL_META_VERSION=`perl -n\
-		-e "BEGIN { \\$key=shift @ARGV; }"\
-		-e "next unless s/^\s*\\$key[:=]//i;"\
-		-e "s/^((?:[^'\"#]*(?:(['\"])[^\2]*\2)*)*)#.*/\\$1/;"\
-		-e "s/^\s+//;"\
-		-e "s/\s+$//;"\
-		-e "s/^(['\"])(.*)\1/\\$2/;"\
-		-e "\\$val=\\$_;"\
-		-e "END { print \\$val if defined \\$val; }"\
-		'VERSION' $META`;
+		SPL_META_VERSION=`$AWK -F ':[ \t]+' '$1 ~ /^ *Version$/ { print $2; exit }' $META`;
 		if test -n "$SPL_META_VERSION"; then
 
 cat >>confdefs.h <<_ACEOF
@@ -2348,17 +2372,8 @@ _ACEOF
 
 		fi
 
-		SPL_META_RELEASE=`perl -n\
-		-e "BEGIN { \\$key=shift @ARGV; }"\
-		-e "next unless s/^\s*\\$key[:=]//i;"\
-		-e "s/^((?:[^'\"#]*(?:(['\"])[^\2]*\2)*)*)#.*/\\$1/;"\
-		-e "s/^\s+//;"\
-		-e "s/\s+$//;"\
-		-e "s/^(['\"])(.*)\1/\\$2/;"\
-		-e "\\$val=\\$_;"\
-		-e "END { print \\$val if defined \\$val; }"\
-		'RELEASE' $META`;
-		if git rev-parse --git-dir > /dev/null 2>&1; then
+		SPL_META_RELEASE=`$AWK -F ':[ \t]+' '$1 ~ /^ *Release$/ { print $2; exit }' $META`;
+		if test ! -f ".nogitrelease" && git rev-parse --git-dir > /dev/null 2>&1; then
 			_match="${SPL_META_NAME}-${SPL_META_VERSION}*"
 			_alias=$(git describe --match=${_match} 2>/dev/null)
 			_release=$(echo ${_alias}|cut -f3- -d'-'|sed 's/-/_/g')
@@ -2392,16 +2407,7 @@ _ACEOF
 
 		fi
 
-		SPL_META_DATA=`perl -n\
-		-e "BEGIN { \\$key=shift @ARGV; }"\
-		-e "next unless s/^\s*\\$key[:=]//i;"\
-		-e "s/^((?:[^'\"#]*(?:(['\"])[^\2]*\2)*)*)#.*/\\$1/;"\
-		-e "s/^\s+//;"\
-		-e "s/\s+$//;"\
-		-e "s/^(['\"])(.*)\1/\\$2/;"\
-		-e "\\$val=\\$_;"\
-		-e "END { print \\$val if defined \\$val; }"\
-		'DATE' $META`;
+		SPL_META_DATA=`$AWK -F ':[ \t]+' '$1 ~ /^ *Date$/ { print $2; exit }' $META`;
 		if test -n "$SPL_META_DATA"; then
 
 cat >>confdefs.h <<_ACEOF
@@ -2411,16 +2417,7 @@ _ACEOF
 
 		fi
 
-		SPL_META_AUTHOR=`perl -n\
-		-e "BEGIN { \\$key=shift @ARGV; }"\
-		-e "next unless s/^\s*\\$key[:=]//i;"\
-		-e "s/^((?:[^'\"#]*(?:(['\"])[^\2]*\2)*)*)#.*/\\$1/;"\
-		-e "s/^\s+//;"\
-		-e "s/\s+$//;"\
-		-e "s/^(['\"])(.*)\1/\\$2/;"\
-		-e "\\$val=\\$_;"\
-		-e "END { print \\$val if defined \\$val; }"\
-		'AUTHOR' $META`;
+		SPL_META_AUTHOR=`$AWK -F ':[ \t]+' '$1 ~ /^ *Author$/ { print $2; exit }' $META`;
 		if test -n "$SPL_META_AUTHOR"; then
 
 cat >>confdefs.h <<_ACEOF
@@ -2431,36 +2428,9 @@ _ACEOF
 		fi
 
 
-		SPL_META_LT_CURRENT=`perl -n\
-		-e "BEGIN { \\$key=shift @ARGV; }"\
-		-e "next unless s/^\s*\\$key[:=]//i;"\
-		-e "s/^((?:[^'\"#]*(?:(['\"])[^\2]*\2)*)*)#.*/\\$1/;"\
-		-e "s/^\s+//;"\
-		-e "s/\s+$//;"\
-		-e "s/^(['\"])(.*)\1/\\$2/;"\
-		-e "\\$val=\\$_;"\
-		-e "END { print \\$val if defined \\$val; }"\
-		'LT_CURRENT' $META`;
-		SPL_META_LT_REVISION=`perl -n\
-		-e "BEGIN { \\$key=shift @ARGV; }"\
-		-e "next unless s/^\s*\\$key[:=]//i;"\
-		-e "s/^((?:[^'\"#]*(?:(['\"])[^\2]*\2)*)*)#.*/\\$1/;"\
-		-e "s/^\s+//;"\
-		-e "s/\s+$//;"\
-		-e "s/^(['\"])(.*)\1/\\$2/;"\
-		-e "\\$val=\\$_;"\
-		-e "END { print \\$val if defined \\$val; }"\
-		'LT_REVISION' $META`;
-		SPL_META_LT_AGE=`perl -n\
-		-e "BEGIN { \\$key=shift @ARGV; }"\
-		-e "next unless s/^\s*\\$key[:=]//i;"\
-		-e "s/^((?:[^'\"#]*(?:(['\"])[^\2]*\2)*)*)#.*/\\$1/;"\
-		-e "s/^\s+//;"\
-		-e "s/\s+$//;"\
-		-e "s/^(['\"])(.*)\1/\\$2/;"\
-		-e "\\$val=\\$_;"\
-		-e "END { print \\$val if defined \\$val; }"\
-		'LT_AGE' $META`;
+		SPL_META_LT_CURRENT=`$AWK -F ':[ \t]+' '$1 ~ /^ *LT_Current$/ { print $2; exit }' $META`;
+		SPL_META_LT_REVISION=`$AWK -F ':[ \t]+' '$1 ~ /^ *LT_Revision$/ { print $2; exit }' $META`;
+		SPL_META_LT_AGE=`$AWK -F ':[ \t]+' '$1 ~ /^ *LT_Age$/ { print $2; exit }' $META`;
 		if test -n "$SPL_META_LT_CURRENT" \
 				 -o -n "$SPL_META_LT_REVISION" \
 				 -o -n "$SPL_META_LT_AGE"; then
@@ -2519,6 +2489,7 @@ fi
 ac_config_guess="$SHELL $ac_aux_dir/config.guess"  # Please don't use this var.
 ac_config_sub="$SHELL $ac_aux_dir/config.sub"  # Please don't use this var.
 ac_configure="$SHELL $ac_aux_dir/configure"  # Please don't use this var.
+
 
 
 # Make sure we can run config.sub.
@@ -2663,7 +2634,7 @@ fi
 case $enable_silent_rules in
 yes) AM_DEFAULT_VERBOSITY=0;;
 no)  AM_DEFAULT_VERBOSITY=1;;
-*)   AM_DEFAULT_VERBOSITY=1;;
+*)   AM_DEFAULT_VERBOSITY=0;;
 esac
 AM_BACKSLASH='\'
 
@@ -3000,48 +2971,6 @@ case $mkdir_p in
   [\\/$]* | ?:[\\/]*) ;;
   */*) mkdir_p="\$(top_builddir)/$mkdir_p" ;;
 esac
-
-for ac_prog in gawk mawk nawk awk
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_prog_AWK+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$AWK"; then
-  ac_cv_prog_AWK="$AWK" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_prog_AWK="$ac_prog"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-AWK=$ac_cv_prog_AWK
-if test -n "$AWK"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $AWK" >&5
-$as_echo "$AWK" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-  test -n "$AWK" && break
-done
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${MAKE-make} sets \$(MAKE)" >&5
 $as_echo_n "checking whether ${MAKE-make} sets \$(MAKE)... " >&6; }
@@ -4737,13 +4666,13 @@ if test "${lt_cv_nm_interface+set}" = set; then :
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:4740: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:4669: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:4743: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:4672: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:4746: output\"" >&5)
+  (eval echo "\"\$as_me:4675: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -5949,7 +5878,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5952 "configure"' > conftest.$ac_ext
+  echo '#line 5881 "configure"' > conftest.$ac_ext
   if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7449,6 +7378,10 @@ _lt_linker_boilerplate=`cat conftest.err`
 $RM -r conftest*
 
 
+## CAVEAT EMPTOR:
+## There is no encapsulation within the following macros, do not change
+## the running order or otherwise move them around unless you know exactly
+## what you are doing...
 if test -n "$compiler"; then
 
 lt_prog_compiler_no_builtin_flag=
@@ -7474,11 +7407,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7477: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7410: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7481: \$? = $ac_status" >&5
+   echo "$as_me:7414: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7813,11 +7746,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7816: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7749: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7820: \$? = $ac_status" >&5
+   echo "$as_me:7753: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7918,11 +7851,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7921: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7854: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:7925: \$? = $ac_status" >&5
+   echo "$as_me:7858: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -7973,11 +7906,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7976: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7909: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:7980: \$? = $ac_status" >&5
+   echo "$as_me:7913: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10357,7 +10290,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 10360 "configure"
+#line 10293 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10453,7 +10386,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 10456 "configure"
+#line 10389 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10962,7 +10895,7 @@ $as_echo "$kernelsrc" >&6; }
 	if test ! -d "$kernelsrc"; then
 		as_fn_error $? "
 	*** Please make sure the kernel devel package for your distribution
-	*** is installed then try again.  If that fails you can specify the
+	*** is installed and then try again.  If that fails, you can specify the
 	*** location of the kernel source with the '--with-linux=PATH' option." "$LINENO" 5
 	fi
 
@@ -11045,7 +10978,7 @@ $as_echo_n "checking kernel file name for module symbols... " >&6; }
 		if ! test -f "$LINUX_OBJ/$LINUX_SYMBOLS"; then
 			as_fn_error $? "
 	*** Please make sure the kernel devel package for your distribution
-	*** is installed.  If your building with a custom kernel make sure the
+	*** is installed.  If you are building with a custom kernel, make sure the
 	*** kernel is configured, built, and the '--with-linux=PATH' configure
 	*** option refers to the location of the kernel source." "$LINENO" 5
 		fi
@@ -11982,6 +11915,165 @@ $as_echo "no" >&6; }
 fi
 	rm -Rf build
 
+
+
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether struct vmalloc_info is declared" >&5
+$as_echo_n "checking whether struct vmalloc_info is declared... " >&6; }
+
+
+cat confdefs.h - <<_ACEOF >conftest.c
+
+
+		#include <linux/vmalloc.h>
+		struct vmalloc_info { void *a; };
+
+int
+main (void)
+{
+
+		return 0;
+
+  ;
+  return 0;
+}
+
+_ACEOF
+
+
+	rm -Rf build && mkdir -p build && touch build/conftest.mod.c
+	echo "obj-m := conftest.o" >build/Makefile
+	modpost_flag=''
+	test "x$enable_linux_builtin" = xyes && modpost_flag='modpost=true' # fake modpost stage
+	if { ac_try='cp conftest.c build && make modules -C $LINUX_OBJ EXTRA_CFLAGS="-Werror-implicit-function-declaration $EXTRA_KCFLAGS" $ARCH_UM M=$PWD/build $modpost_flag'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } >/dev/null && { ac_try='test -s build/conftest.o'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+else
+  $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+$as_echo "#define HAVE_VMALLOC_INFO 1" >>confdefs.h
+
+
+
+
+fi
+	rm -Rf build
+
+
+
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether PDE_DATA() is available" >&5
+$as_echo_n "checking whether PDE_DATA() is available... " >&6; }
+
+
+
+cat confdefs.h - <<_ACEOF >conftest.c
+
+
+		#include <linux/proc_fs.h>
+
+int
+main (void)
+{
+
+		PDE_DATA(NULL);
+
+  ;
+  return 0;
+}
+
+_ACEOF
+
+
+	rm -Rf build && mkdir -p build && touch build/conftest.mod.c
+	echo "obj-m := conftest.o" >build/Makefile
+	modpost_flag=''
+	test "x$enable_linux_builtin" = xyes && modpost_flag='modpost=true' # fake modpost stage
+	if { ac_try='cp conftest.c build && make modules -C $LINUX_OBJ EXTRA_CFLAGS="-Werror-implicit-function-declaration $EXTRA_KCFLAGS" $ARCH_UM M=$PWD/build $modpost_flag'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } >/dev/null && { ac_try='test -s build/conftest.o'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  rc=0
+else
+  $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+ rc=1
+
+
+fi
+	rm -Rf build
+
+
+	if test $rc -ne 0; then :
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+	else
+		if test "x$enable_linux_builtin" != xyes; then
+
+	grep -q -E '[[:space:]]PDE_DATA[[:space:]]' \
+		$LINUX_OBJ/Module*.symvers 2>/dev/null
+	rc=$?
+	if test $rc -ne 0; then
+		export=0
+		for file in ; do
+			grep -q -E "EXPORT_SYMBOL.*(PDE_DATA)" \
+				"$LINUX_OBJ/$file" 2>/dev/null
+			rc=$?
+			if test $rc -eq 0; then
+				export=1
+				break;
+			fi
+		done
+		if test $export -eq 0; then :
+			rc=1
+		else :
+			rc=0
+		fi
+	else :
+		rc=0
+	fi
+
+		fi
+		if test $rc -ne 0; then :
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+		else :
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+$as_echo "#define HAVE_PDE_DATA 1" >>confdefs.h
+
+
+		fi
+	fi
 
 
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether fls64() is available" >&5
@@ -15019,6 +15111,117 @@ fi
 
 
 
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether kuid_t/kgid_t is available" >&5
+$as_echo_n "checking whether kuid_t/kgid_t is available... " >&6; }
+
+
+cat confdefs.h - <<_ACEOF >conftest.c
+
+
+		#include <linux/uidgid.h>
+
+int
+main (void)
+{
+
+		kuid_t userid = KUIDT_INIT(0);
+		kgid_t groupid = KGIDT_INIT(0);
+
+  ;
+  return 0;
+}
+
+_ACEOF
+
+
+	rm -Rf build && mkdir -p build && touch build/conftest.mod.c
+	echo "obj-m := conftest.o" >build/Makefile
+	modpost_flag=''
+	test "x$enable_linux_builtin" = xyes && modpost_flag='modpost=true' # fake modpost stage
+	if { ac_try='cp conftest.c build && make modules -C $LINUX_OBJ EXTRA_CFLAGS="-Werror-implicit-function-declaration $EXTRA_KCFLAGS" $ARCH_UM M=$PWD/build $modpost_flag'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } >/dev/null && { ac_try='test -s build/conftest.o'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+
+
+
+cat confdefs.h - <<_ACEOF >conftest.c
+
+
+			#include <linux/uidgid.h>
+
+int
+main (void)
+{
+
+			kuid_t userid = 0;
+			kgid_t groupid = 0;
+
+  ;
+  return 0;
+}
+
+_ACEOF
+
+
+	rm -Rf build && mkdir -p build && touch build/conftest.mod.c
+	echo "obj-m := conftest.o" >build/Makefile
+	modpost_flag=''
+	test "x$enable_linux_builtin" = xyes && modpost_flag='modpost=true' # fake modpost stage
+	if { ac_try='cp conftest.c build && make modules -C $LINUX_OBJ EXTRA_CFLAGS="-Werror-implicit-function-declaration $EXTRA_KCFLAGS" $ARCH_UM M=$PWD/build $modpost_flag'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } >/dev/null && { ac_try='test -s build/conftest.o'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+
+			{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes; optional" >&5
+$as_echo "yes; optional" >&6; }
+
+else
+  $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+			{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes; mandatory" >&5
+$as_echo "yes; mandatory" >&6; }
+
+$as_echo "#define HAVE_KUIDGID_T 1" >>confdefs.h
+
+
+
+
+fi
+	rm -Rf build
+
+
+
+else
+  $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+
+
+fi
+	rm -Rf build
+
+
+
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether groups_search() is available" >&5
 $as_echo_n "checking whether groups_search() is available... " >&6; }
 
@@ -15028,12 +15231,19 @@ cat confdefs.h - <<_ACEOF >conftest.c
 
 
 		#include <linux/cred.h>
+		#ifdef HAVE_KUIDGID_T
+		#include <linux/uidgid.h>
+		#endif
 
 int
 main (void)
 {
 
+		#ifdef HAVE_KUIDGID_T
+		groups_search(NULL, KGIDT_INIT(0));
+		#else
 		groups_search(NULL, 0);
+		#endif
 
   ;
   return 0;
@@ -16585,7 +16795,7 @@ $as_echo "$kernelsrc" >&6; }
 	if test ! -d "$kernelsrc"; then
 		as_fn_error $? "
 	*** Please make sure the kernel devel package for your distribution
-	*** is installed then try again.  If that fails you can specify the
+	*** is installed and then try again.  If that fails, you can specify the
 	*** location of the kernel source with the '--with-linux=PATH' option." "$LINENO" 5
 	fi
 
@@ -16668,7 +16878,7 @@ $as_echo_n "checking kernel file name for module symbols... " >&6; }
 		if ! test -f "$LINUX_OBJ/$LINUX_SYMBOLS"; then
 			as_fn_error $? "
 	*** Please make sure the kernel devel package for your distribution
-	*** is installed.  If your building with a custom kernel make sure the
+	*** is installed.  If you are building with a custom kernel, make sure the
 	*** kernel is configured, built, and the '--with-linux=PATH' configure
 	*** option refers to the location of the kernel source." "$LINENO" 5
 		fi
@@ -17605,6 +17815,165 @@ $as_echo "no" >&6; }
 fi
 	rm -Rf build
 
+
+
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether struct vmalloc_info is declared" >&5
+$as_echo_n "checking whether struct vmalloc_info is declared... " >&6; }
+
+
+cat confdefs.h - <<_ACEOF >conftest.c
+
+
+		#include <linux/vmalloc.h>
+		struct vmalloc_info { void *a; };
+
+int
+main (void)
+{
+
+		return 0;
+
+  ;
+  return 0;
+}
+
+_ACEOF
+
+
+	rm -Rf build && mkdir -p build && touch build/conftest.mod.c
+	echo "obj-m := conftest.o" >build/Makefile
+	modpost_flag=''
+	test "x$enable_linux_builtin" = xyes && modpost_flag='modpost=true' # fake modpost stage
+	if { ac_try='cp conftest.c build && make modules -C $LINUX_OBJ EXTRA_CFLAGS="-Werror-implicit-function-declaration $EXTRA_KCFLAGS" $ARCH_UM M=$PWD/build $modpost_flag'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } >/dev/null && { ac_try='test -s build/conftest.o'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+else
+  $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+$as_echo "#define HAVE_VMALLOC_INFO 1" >>confdefs.h
+
+
+
+
+fi
+	rm -Rf build
+
+
+
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether PDE_DATA() is available" >&5
+$as_echo_n "checking whether PDE_DATA() is available... " >&6; }
+
+
+
+cat confdefs.h - <<_ACEOF >conftest.c
+
+
+		#include <linux/proc_fs.h>
+
+int
+main (void)
+{
+
+		PDE_DATA(NULL);
+
+  ;
+  return 0;
+}
+
+_ACEOF
+
+
+	rm -Rf build && mkdir -p build && touch build/conftest.mod.c
+	echo "obj-m := conftest.o" >build/Makefile
+	modpost_flag=''
+	test "x$enable_linux_builtin" = xyes && modpost_flag='modpost=true' # fake modpost stage
+	if { ac_try='cp conftest.c build && make modules -C $LINUX_OBJ EXTRA_CFLAGS="-Werror-implicit-function-declaration $EXTRA_KCFLAGS" $ARCH_UM M=$PWD/build $modpost_flag'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } >/dev/null && { ac_try='test -s build/conftest.o'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+  rc=0
+else
+  $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+ rc=1
+
+
+fi
+	rm -Rf build
+
+
+	if test $rc -ne 0; then :
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+	else
+		if test "x$enable_linux_builtin" != xyes; then
+
+	grep -q -E '[[:space:]]PDE_DATA[[:space:]]' \
+		$LINUX_OBJ/Module*.symvers 2>/dev/null
+	rc=$?
+	if test $rc -ne 0; then
+		export=0
+		for file in ; do
+			grep -q -E "EXPORT_SYMBOL.*(PDE_DATA)" \
+				"$LINUX_OBJ/$file" 2>/dev/null
+			rc=$?
+			if test $rc -eq 0; then
+				export=1
+				break;
+			fi
+		done
+		if test $export -eq 0; then :
+			rc=1
+		else :
+			rc=0
+		fi
+	else :
+		rc=0
+	fi
+
+		fi
+		if test $rc -ne 0; then :
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+		else :
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+$as_echo "#define HAVE_PDE_DATA 1" >>confdefs.h
+
+
+		fi
+	fi
 
 
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether fls64() is available" >&5
@@ -20642,6 +21011,117 @@ fi
 
 
 
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether kuid_t/kgid_t is available" >&5
+$as_echo_n "checking whether kuid_t/kgid_t is available... " >&6; }
+
+
+cat confdefs.h - <<_ACEOF >conftest.c
+
+
+		#include <linux/uidgid.h>
+
+int
+main (void)
+{
+
+		kuid_t userid = KUIDT_INIT(0);
+		kgid_t groupid = KGIDT_INIT(0);
+
+  ;
+  return 0;
+}
+
+_ACEOF
+
+
+	rm -Rf build && mkdir -p build && touch build/conftest.mod.c
+	echo "obj-m := conftest.o" >build/Makefile
+	modpost_flag=''
+	test "x$enable_linux_builtin" = xyes && modpost_flag='modpost=true' # fake modpost stage
+	if { ac_try='cp conftest.c build && make modules -C $LINUX_OBJ EXTRA_CFLAGS="-Werror-implicit-function-declaration $EXTRA_KCFLAGS" $ARCH_UM M=$PWD/build $modpost_flag'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } >/dev/null && { ac_try='test -s build/conftest.o'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+
+
+
+cat confdefs.h - <<_ACEOF >conftest.c
+
+
+			#include <linux/uidgid.h>
+
+int
+main (void)
+{
+
+			kuid_t userid = 0;
+			kgid_t groupid = 0;
+
+  ;
+  return 0;
+}
+
+_ACEOF
+
+
+	rm -Rf build && mkdir -p build && touch build/conftest.mod.c
+	echo "obj-m := conftest.o" >build/Makefile
+	modpost_flag=''
+	test "x$enable_linux_builtin" = xyes && modpost_flag='modpost=true' # fake modpost stage
+	if { ac_try='cp conftest.c build && make modules -C $LINUX_OBJ EXTRA_CFLAGS="-Werror-implicit-function-declaration $EXTRA_KCFLAGS" $ARCH_UM M=$PWD/build $modpost_flag'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; } >/dev/null && { ac_try='test -s build/conftest.o'
+  { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_try\""; } >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; }; then :
+
+			{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes; optional" >&5
+$as_echo "yes; optional" >&6; }
+
+else
+  $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+			{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes; mandatory" >&5
+$as_echo "yes; mandatory" >&6; }
+
+$as_echo "#define HAVE_KUIDGID_T 1" >>confdefs.h
+
+
+
+
+fi
+	rm -Rf build
+
+
+
+else
+  $as_echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+
+
+fi
+	rm -Rf build
+
+
+
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether groups_search() is available" >&5
 $as_echo_n "checking whether groups_search() is available... " >&6; }
 
@@ -20651,12 +21131,19 @@ cat confdefs.h - <<_ACEOF >conftest.c
 
 
 		#include <linux/cred.h>
+		#ifdef HAVE_KUIDGID_T
+		#include <linux/uidgid.h>
+		#endif
 
 int
 main (void)
 {
 
+		#ifdef HAVE_KUIDGID_T
+		groups_search(NULL, KGIDT_INIT(0));
+		#else
 		groups_search(NULL, 0);
+		#endif
 
   ;
   return 0;
