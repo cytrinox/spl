@@ -95,8 +95,12 @@
 #define minclsyspri			(MAX_RT_PRIO)
 #define maxclsyspri			(MAX_PRIO-1)
 
+#ifndef NICE_TO_PRIO
 #define NICE_TO_PRIO(nice)		(MAX_RT_PRIO + (nice) + 20)
+#endif
+#ifndef PRIO_TO_NICE
 #define PRIO_TO_NICE(prio)		((prio) - MAX_RT_PRIO - 20)
+#endif
 
 /* Missing macros
  */
@@ -143,10 +147,10 @@
 /* Missing globals */
 extern char spl_version[32];
 extern unsigned long spl_hostid;
-extern char hw_serial[11];
 
 /* Missing misc functions */
 extern int highbit(unsigned long i);
+extern int highbit64(uint64_t i);
 extern uint32_t zone_get_hostid(void *zone);
 extern void spl_setup(void);
 extern void spl_cleanup(void);
@@ -168,6 +172,9 @@ extern void spl_cleanup(void);
 #endif
 #ifndef roundup
 #define roundup(x, y)		((((x) + ((y) - 1)) / (y)) * (y))
+#endif
+#ifndef howmany
+#define howmany(x, y)		(((x) + ((y) - 1)) / (y))
 #endif
 
 /*
