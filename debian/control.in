@@ -9,9 +9,9 @@ Build-Depends: autoconf,
                automake,
                autotools-dev,
                debhelper (>= 9),
-               dkms (>> 2.1.1.2-5),
+               dkms (>> 2.2.0.2-1~),
                libtool
-Standards-Version: 3.9.4
+Standards-Version: 3.9.5
 Homepage: http://www.zfsonlinux.org/
 Vcs-Git: git://anonscm.debian.org/pkg-zfsonlinux/spl.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-zfsonlinux/spl.git
