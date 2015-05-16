@@ -1,3 +1,9 @@
+spl-linux (0.6.4.1-1) experimental; urgency=medium
+
+  * New upstream release.
+
+ -- Aron Xu <aron@debian.org>  Sun, 17 May 2015 05:47:51 +0800
+
 spl-linux (0.6.2-2) experimental; urgency=low
 
   * Add file and libc-dev to Depends of spl-dkms (Closes: #717565).
