@@ -102,9 +102,12 @@
 #define PRIO_TO_NICE(prio)		((prio) - MAX_RT_PRIO - 20)
 #endif
 
-/* Missing macros
+/*
+ * Missing macros
  */
+#ifndef PAGESIZE
 #define PAGESIZE			PAGE_SIZE
+#endif
 
 /* from Solaris sys/byteorder.h */
 #define BSWAP_8(x)	((x) & 0xff)
@@ -149,13 +152,12 @@ extern char spl_version[32];
 extern unsigned long spl_hostid;
 
 /* Missing misc functions */
-extern int highbit(unsigned long i);
-extern int highbit64(uint64_t i);
 extern uint32_t zone_get_hostid(void *zone);
 extern void spl_setup(void);
 extern void spl_cleanup(void);
 
-#define makedevice(maj,min) makedev(maj,min)
+#define	highbit64(x)		fls64(x)
+#define	makedevice(maj,min)	makedev(maj,min)
 
 /* common macros */
 #ifndef MIN
