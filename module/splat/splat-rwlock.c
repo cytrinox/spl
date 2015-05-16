@@ -24,9 +24,11 @@
  *  Solaris Porting LAyer Tests (SPLAT) Read/Writer Lock Tests.
 \*****************************************************************************/
 
+#include <sys/random.h>
 #include <sys/rwlock.h>
 #include <sys/taskq.h>
-#include <sys/random.h>
+#include <linux/delay.h>
+#include <linux/mm_compat.h>
 #include "splat-internal.h"
 
 #define SPLAT_RWLOCK_NAME		"rwlock"
@@ -215,10 +217,10 @@ splat_rwlock_test1(struct file *file, void *arg)
 
 		/* The first thread will be the writer */
 		if (i == 0)
-			rwt[i].rwt_thread = kthread_create(splat_rwlock_wr_thr,
+			rwt[i].rwt_thread = spl_kthread_create(splat_rwlock_wr_thr,
 			    &rwt[i], "%s/%d", SPLAT_RWLOCK_TEST_NAME, i);
 		else
-			rwt[i].rwt_thread = kthread_create(splat_rwlock_rd_thr,
+			rwt[i].rwt_thread = spl_kthread_create(splat_rwlock_rd_thr,
 			    &rwt[i], "%s/%d", SPLAT_RWLOCK_TEST_NAME, i);
 
 		if (!IS_ERR(rwt[i].rwt_thread)) {
