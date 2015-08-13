@@ -32,7 +32,8 @@ override_dh_auto_configure:
 	./autogen.sh
 
 	@# Build the userland, but don't build the kernel modules.
-	./configure --prefix=/usr --with-config=user
+	./configure --prefix=/usr --with-config=user \
+		--disable-debug-kmem
 
 override_dh_auto_test:
 	# scripts/check.sh tries insmod and rmmod, so it cannot
@@ -93,7 +94,8 @@ override_dh_prep-deb-files:
 override_dh_configure_modules: override_dh_configure_modules_stamp
 override_dh_configure_modules_stamp:
 	./configure --with-config=kernel --with-linux=$(KSRC) \
-		--with-linux-obj=$(KOBJ)
+		--with-linux-obj=$(KOBJ) \
+		--disable-debug-kmem
 	touch override_dh_configure_modules_stamp
 
 override_dh_binary-modules-udeb: override_dh_prep-deb-files override_dh_configure_modules
