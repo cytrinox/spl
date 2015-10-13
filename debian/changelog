@@ -1,3 +1,10 @@
+spl-linux (0.6.5.2-1) unstable; urgency=medium
+
+  * Imported Upstream version 0.6.5.2
+  * Add conflicts to splat (Closes: #769147)
+
+ -- Aron Xu <aron@debian.org>  Tue, 13 Oct 2015 15:26:33 +0100
+
 spl-linux (0.6.4.2-1) experimental; urgency=medium
 
   * New upstream release.
