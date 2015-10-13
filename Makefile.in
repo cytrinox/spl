@@ -73,9 +73,9 @@ host_triplet = @host@
 target_triplet = @target@
 DIST_COMMON = $(am__configure_deps) $(am__extra_HEADERS_DIST) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/spl.release.in $(srcdir)/spl_config.h.in \
-	$(top_srcdir)/config/deb.am $(top_srcdir)/config/rpm.am \
-	$(top_srcdir)/config/tgz.am $(top_srcdir)/configure \
+	$(srcdir)/config/deb.am $(srcdir)/config/rpm.am \
+	$(srcdir)/config/tgz.am $(srcdir)/spl.release.in \
+	$(srcdir)/spl_config.h.in $(top_srcdir)/configure \
 	$(top_srcdir)/module/Makefile.in \
 	$(top_srcdir)/module/spl/Makefile.in \
 	$(top_srcdir)/module/splat/Makefile.in AUTHORS COPYING \
@@ -376,7 +376,7 @@ all: spl_config.h
 .SUFFIXES:
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(top_srcdir)/config/rpm.am $(top_srcdir)/config/deb.am $(top_srcdir)/config/tgz.am $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/config/rpm.am $(srcdir)/config/deb.am $(srcdir)/config/tgz.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -399,7 +399,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
 	esac;
-$(top_srcdir)/config/rpm.am $(top_srcdir)/config/deb.am $(top_srcdir)/config/tgz.am:
+$(srcdir)/config/rpm.am $(srcdir)/config/deb.am $(srcdir)/config/tgz.am:
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -980,7 +980,7 @@ rpm-local:
 	mkdir -p $(rpmbuild)/SPECS && \
 	cp ${RPM_SPEC_DIR}/$(rpmspec) $(rpmbuild)/SPECS && \
 	mkdir -p $(rpmbuild)/SOURCES && \
-	cp scripts/kmodtool $(rpmbuild)/SOURCES && \
+	cp $(top_srcdir)/scripts/kmodtool $(rpmbuild)/SOURCES && \
 	cp $(distdir).tar.gz $(rpmbuild)/SOURCES)
 
 srpm-common: dist
@@ -1093,11 +1093,11 @@ dist-hook:
 		$(distdir)/META
 
 ctags:
-	$(RM) $(top_srcdir)/tags
+	$(RM) tags
 	find $(top_srcdir) -name .git -prune -o -name '*.[hc]' | xargs ctags
 
 etags:
-	$(RM) $(top_srcdir)/TAGS
+	$(RM) TAGS
 	find $(top_srcdir) -name .pc -prune -o -name '*.[hc]' | xargs etags -a
 
 tags: ctags etags
