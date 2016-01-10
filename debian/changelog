@@ -1,3 +1,9 @@
+spl-linux (0.6.5.4-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Aron Xu <aron@debian.org>  Sun, 10 Jan 2016 20:13:15 +0800
+
 spl-linux (0.6.5.3-1) unstable; urgency=medium
 
   * New upstream release
