@@ -1,3 +1,10 @@
+spl-linux (0.6.5.6-2) unstable; urgency=medium
+
+  * Add license names to entries missing it.
+  * Added autopkgtest using code from Ubuntu using dkms >= 2.2.0.3-3~.
+
+ -- Petter Reinholdtsen <pere@hungry.com>  Thu, 28 Apr 2016 20:21:29 +0800
+
 spl-linux (0.6.5.6-1) unstable; urgency=medium
 
   * New upstream release
