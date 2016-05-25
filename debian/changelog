@@ -1,3 +1,9 @@
+spl-linux (0.6.5.7-1) unstable; urgency=medium
+
+  * Imported Upstream version 0.6.5.7
+
+ -- Aron Xu <aron@debian.org>  Wed, 25 May 2016 12:17:05 +0800
+
 spl-linux (0.6.5.6-2) unstable; urgency=medium
 
   * Add license names to entries missing it.
